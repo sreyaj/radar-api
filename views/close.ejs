@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nice Header</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>All Issues</h1>
+  <br>
+
+  <ol type="1">
+
+
+    <h1> <% state %> </h1>
+    <% issue_array.forEach(function(data){ %>
+      <li><%= data %></li>
+    <% }) %>      
+</ol>
+  </body>
+</html>

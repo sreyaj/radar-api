@@ -5,19 +5,16 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1>URLs</h1>
-  
+    <h1>All Issues</h1>
+  <br>
 
   <ol type="1">
 
 
-    <% issues.forEach(function(data){ %>
+    <h1> <%= state %> </h1>
+    <% issue_array.forEach(function(data){ %>
       <li><%= data %></li>
     <% }) %>      
-
-
-  </ol>
-
-
+</ol>
   </body>
 </html>
