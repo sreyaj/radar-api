@@ -5,16 +5,18 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1>All Issues</h1>
+    <h1>GitIssues</h1>
   <br>
 
-  <ol type="1">
+    <h1> <%= state %> </h1>
+    <br>
+    <h2> Number of Issues <%= state %> within <%= day %> is <%= number %></h2>
+    <br>
 
 
-    <h1> <% state %> </h1>
-    <% issue_array.forEach(function(data){ %>
-      <li><%= data %></li>
-    <% }) %>      
-</ol>
+<form method = "get" action="./">
+<input type="submit" name="state" value="Back!">
+</form>
+ 
   </body>
 </html>
