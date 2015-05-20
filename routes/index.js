@@ -7,9 +7,10 @@ var page=1;
 var no_issues_mod100=0;
 var days = 0;
 var numberOfIssues = 0;
+var totalNumber = 0;
+var daysEnd = 0;
 /* GET home page. */
 
-//// OPEN VAR
 /*
 0, 0 - question, resolved
 0, 1 - question, triaged
@@ -29,19 +30,6 @@ var numberOfIssues = 0;
 3, 3 - other, other
 */
 
-var question = 0;
-var bug = 1;
-var feature = 2;
-var other = 3;
-var resolved = 0;
-var triaged = 1;
-var progress = 2;
-var other = 3;
-
-//// CLOSE VAR
-
-
-console.log("0");
 
 router.get('/', function(req, res, next) {
 	res.redirect('/');
@@ -51,6 +39,7 @@ router.post('/', function(req, res, next) {
 	issue_array = [];
 	data = "";
 	numberOfIssues = 0;
+	totalNumber = 0;
 	
 	if (req.body.state == "Open") {
 		mainLoading("open", req, res, next);	
@@ -64,7 +53,7 @@ function mainLoading(state, req, res, next) {
 	repo = req.body.name + "/" + req.body.repo;
 	console.log(repo);
 	days = req.body.days;
-
+	daysEnd = req.body.daysEnd;
 	while(data.length%100==0 && no_issues_mod100==0){
 		var options = { 
 			headers: {
@@ -90,10 +79,11 @@ function mainLoading(state, req, res, next) {
 }
 
 function open () {
+	totalNumber = totalNumber + data.length;
 	for(i=0;i<data.length;i++){
 		var a = data[i].created_at;
 		var daysPast = daysFromCurrent(a);
-		if (daysPast < days) {
+		if (days < daysPast && daysPast < daysEnd) {
 			numberOfIssues++;
 		}
 	}
@@ -105,11 +95,12 @@ function open () {
 
 
 function close () {
+	totalNumber = totalNumber + data.length;
 	for(i=0;i<data.length;i++) {
 		var a = data[i].created_at;
 		var b = data[i].closed_at;
 		var daysPast = dateDiff(a, b);
-		if (daysPast < days) {
+		if (days < daysPast && daysPast < daysEnd) {
 			numberOfIssues++;
 		}
 	}
@@ -126,9 +117,9 @@ module.exports = router;
 
 function load(res, state) {
 	if (state == "open") {
-		res.render('index', { number: numberOfIssues, day: days, state: "Open issues" });
+		res.render('index', { daysEnd: daysEnd, number: numberOfIssues, day: days, state: "Open issues", total: totalNumber});
 	} else {
-		res.render('close', { number: numberOfIssues, day: days, state: "Closed issues" });
+		res.render('close', { daysEnd: daysEnd, number: numberOfIssues, day: days, state: "Closed issues", total: totalNumber });
 	}
 }
 
@@ -143,4 +134,3 @@ function dateDiff(dateString_open,dateString_close){
     var close=new Date(dateString_close);
     return (close.getTime()-open.getTime())/(1000*3600*24);
 }
-
