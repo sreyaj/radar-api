@@ -32,7 +32,26 @@ var daysEnd = 0;
 
 
 router.get('/', function(req, res, next) {
-	res.redirect('/');
+	issue_array = [];
+	data = "";
+	numberOfIssues = 0;
+	totalNumber = 0;
+	try {
+		if (req.query.token != undefined) {
+			
+			if (req.query.state == "Open") {
+				mainLoadingGET("open", req, res, next);
+
+			} else {
+				mainLoadingGET("closed", req, res, next);
+			}
+		} else {
+			res.redirect('/');	
+		}
+	} catch (e) {
+		res.redirect('/');	
+	}
+	
 });
 
 router.post('/', function(req, res, next) {
@@ -42,21 +61,17 @@ router.post('/', function(req, res, next) {
 	totalNumber = 0;
 	
 	if (req.body.state == "Open") {
-		mainLoading("open", req, res, next);	
+		mainLoadingPOST("open", req, res, next);	
 	} else {
-		mainLoading("closed", req, res, next);
+		mainLoadingPOST("closed", req, res, next);
 	}
 });
 
-function mainLoading(state, req, res, next) {
+function mainLoadingPOST(state, req, res, next) {
 	page = 1;
 	repo = req.body.username + "/" + req.body.repo;
-	console.log(repo);
-	console.log("token printed="+req.body.token);
 	days = req.body.days;
-	console.log(days);
 	daysEnd = req.body.daysEnd;
-	console.log(daysEnd);
 	while(data.length%100==0 && no_issues_mod100==0){
 		var options = { 
 			headers: {
@@ -76,10 +91,52 @@ function mainLoading(state, req, res, next) {
   		page++;
   	}
   	
-	console.log(issue_array.length);
-	
   	load(res, state);
 }
+
+
+function mainLoadingGET(state, req, res, next) {
+	
+	page = 1;
+	repo = req.query.username + "/" + req.query.repo;
+	days = req.query.days;
+	daysEnd = req.query.daysEnd;
+	
+	console.log(repo);
+	
+
+	while(data.length%100==0 && no_issues_mod100==0){
+		var options = { 
+			headers: {
+			'User-Agent': 'funapp'
+			}
+		};
+		var data_json=request('GET','https://api.github.com/repos/' + repo + '/issues?state=' + state + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100',options);
+
+		data=JSON.parse(data_json.getBody());
+		//
+		if (state == "open") {
+			open();
+		} else {
+			close();
+		}
+		//
+  		page++;
+  	}
+  	
+  	load(res, state);
+}
+
+
+
+
+
+
+
+
+
+
+
 
 function open () {
 	totalNumber = totalNumber + data.length;
@@ -119,7 +176,6 @@ module.exports = router;
 
 
 function load(res, state) {
-	console.log("Index rendering");
 	if (state == "open") {
 		res.render('index', { daysEnd: daysEnd, number: numberOfIssues, day: days, state: "Open issues", total: totalNumber});
 	} else {
