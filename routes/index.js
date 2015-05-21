@@ -50,10 +50,13 @@ router.post('/', function(req, res, next) {
 
 function mainLoading(state, req, res, next) {
 	page = 1;
-	repo = req.body.name + "/" + req.body.repo;
+	repo = req.body.username + "/" + req.body.repo;
 	console.log(repo);
+	console.log("token printed="+req.body.token);
 	days = req.body.days;
+	console.log(days);
 	daysEnd = req.body.daysEnd;
+	console.log(daysEnd);
 	while(data.length%100==0 && no_issues_mod100==0){
 		var options = { 
 			headers: {
@@ -116,6 +119,7 @@ module.exports = router;
 
 
 function load(res, state) {
+	console.log("Index rendering");
 	if (state == "open") {
 		res.render('index', { daysEnd: daysEnd, number: numberOfIssues, day: days, state: "Open issues", total: totalNumber});
 	} else {
