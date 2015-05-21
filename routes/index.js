@@ -9,40 +9,24 @@ var days = 0;
 var numberOfIssues = 0;
 var totalNumber = 0;
 var daysEnd = 0;
-/* GET home page. */
-
-/*
-0, 0 - question, resolved
-0, 1 - question, triaged
-0, 2 - question, progress
-0, 3 - question, other
-1, 0 - bug, resolved
-1, 1 - bug, triaged
-1, 2 - bug, progress
-1, 3 - bug, other
-2, 0 - feature, resolved
-2, 1 - feature, triaged
-2, 2 - feature, progress
-2, 3 - feature, other
-3, 0 - other, resolved
-3, 1 - other, triaged
-3, 2 - other, progress
-3, 3 - other, other
-*/
 
 
 router.get('/', function(req, res, next) {
 	issue_array = [];
 	data = "";
 	numberOfIssues = 0;
-	totalNumber = 0;
+	totalNumber = 0;	
+	no_issues_mod100=0;
+
 	try {
 		if (req.query.token != undefined) {
 			
 			if (req.query.state == "Open") {
+					data = "";
 				mainLoadingGET("open", req, res, next);
 
 			} else {
+					data = "";
 				mainLoadingGET("closed", req, res, next);
 			}
 		} else {
@@ -54,46 +38,6 @@ router.get('/', function(req, res, next) {
 	
 });
 
-router.post('/', function(req, res, next) {
-	issue_array = [];
-	data = "";
-	numberOfIssues = 0;
-	totalNumber = 0;
-	
-	if (req.body.state == "Open") {
-		mainLoadingPOST("open", req, res, next);	
-	} else {
-		mainLoadingPOST("closed", req, res, next);
-	}
-});
-
-function mainLoadingPOST(state, req, res, next) {
-	page = 1;
-	repo = req.body.username + "/" + req.body.repo;
-	days = req.body.days;
-	daysEnd = req.body.daysEnd;
-	while(data.length%100==0 && no_issues_mod100==0){
-		var options = { 
-			headers: {
-			'User-Agent': 'funapp'
-			}
-		};
-		var data_json=request('GET','https://api.github.com/repos/' + repo + '/issues?state=' + state + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100',options);
-
-		data=JSON.parse(data_json.getBody());
-		//
-		if (state == "open") {
-			open();
-		} else {
-			close();
-		}
-		//
-  		page++;
-  	}
-  	
-  	load(res, state);
-}
-
 
 function mainLoadingGET(state, req, res, next) {
 	
@@ -101,17 +45,19 @@ function mainLoadingGET(state, req, res, next) {
 	repo = req.query.username + "/" + req.query.repo;
 	days = req.query.days;
 	daysEnd = req.query.daysEnd;
+	token = req.query.token;
+	console.log("HERE IS MY REPO: " + repo);
 	
-	console.log(repo);
-	
-
 	while(data.length%100==0 && no_issues_mod100==0){
 		var options = { 
 			headers: {
 			'User-Agent': 'funapp'
 			}
 		};
-		var data_json=request('GET','https://api.github.com/repos/' + repo + '/issues?state=' + state + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100',options);
+		willPrint = 'https://api.github.com/repos/' + repo + '/issues?state=' + state + '&acess_token=' +  token + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100';
+
+		console.log('I WILL TRY TO GO: ' + willPrint);
+		var data_json=request('GET','https://api.github.com/repos/' + repo + '/issues?state=' + state + '&access_token=' +  token + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100',options);
 
 		data=JSON.parse(data_json.getBody());
 		//
@@ -124,18 +70,9 @@ function mainLoadingGET(state, req, res, next) {
   		page++;
   	}
   	
+	console.log("I AM LOADING THE GET PAGE");
   	load(res, state);
 }
-
-
-
-
-
-
-
-
-
-
 
 
 function open () {

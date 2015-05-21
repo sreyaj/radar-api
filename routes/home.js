@@ -51,8 +51,12 @@ router.get('/', function(req, res, next) {
 	req_.write(post_dataString);
 	req_.end();
 }	
-
-  res.render('home', { user: 'User!',accessToken : accessToken});
+	if (accessToken != "") {
+	res.render('home', { user: 'Person Who Has Signed In',accessToken : accessToken});		
+} else {
+	res.render('home', { user: 'User!',accessToken : accessToken});
+}
+  
 });
 
 router.post('/', function(req, res, next){
