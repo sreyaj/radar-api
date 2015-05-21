@@ -46,8 +46,6 @@ function mainLoadingGET(state, req, res, next) {
 	days = req.query.days;
 	daysEnd = req.query.daysEnd;
 	token = req.query.token;
-	console.log("HERE IS MY REPO: " + repo);
-	
 	while(data.length%100==0 && no_issues_mod100==0){
 		var options = { 
 			headers: {
@@ -56,7 +54,6 @@ function mainLoadingGET(state, req, res, next) {
 		};
 		willPrint = 'https://api.github.com/repos/' + repo + '/issues?state=' + state + '&acess_token=' +  token + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100';
 
-		console.log('I WILL TRY TO GO: ' + willPrint);
 		var data_json=request('GET','https://api.github.com/repos/' + repo + '/issues?state=' + state + '&access_token=' +  token + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100',options);
 
 		data=JSON.parse(data_json.getBody());
@@ -69,8 +66,6 @@ function mainLoadingGET(state, req, res, next) {
 		//
   		page++;
   	}
-  	
-	console.log("I AM LOADING THE GET PAGE");
   	load(res, state);
 }
 
