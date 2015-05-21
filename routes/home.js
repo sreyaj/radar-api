@@ -51,12 +51,7 @@ router.get('/', function(req, res, next) {
 	req_.write(post_dataString);
 	req_.end();
 }	
-/*
-if(typeof req.query.code != 'undefined'){
-	var options={};
-var token=request('POST','https://github.com/login/oauth/access_token?client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&code='+ req.query.code, options);
-	console.log(res);
-}*/
+
   res.render('home', { user: 'User!',accessToken : accessToken});
 });
 
