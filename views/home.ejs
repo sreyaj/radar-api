@@ -19,12 +19,11 @@
   <br>
    <center> <h1 class = "animated bounceInLeft"> Welcome <%= user %> !! </h1></center>
   <br>
-
-
-
+<% if (user == 'User') { %>
 <center><button onclick="location.href = 'https://github.com/login/oauth/authorize?client_id=58161dcf40849abffecd&scope=repo';" id="SignUp" class="btn btn-lg btn-success" >Github OAuth</button></center>
 <br>
-<br>
+<br><% } %>
+
 <div class="conatiner">
   
   <form method="post" action="./" class="form-horizontal" role="form" style="padding:50px">
