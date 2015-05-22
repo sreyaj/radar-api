@@ -41,23 +41,16 @@ function mainLoadingGET(state, req, res, next) {
 	days = req.query.days;
 	daysEnd = req.query.daysEnd;
 	token = req.query.token;
-<<<<<<< HEAD
-=======
 
 	page=1;
 
->>>>>>> 4aa5d23ba60f7966a7780167378f598b38fb19d6
 	while(data.length%100==0 && no_issues_mod100==0){
 		var options = { 
 			headers: {
 			'User-Agent': 'funapp'
 			}
 		};
-<<<<<<< HEAD
-		willPrint = 'https://api.github.com/repos/' + repo + '/issues?state=' + state + '&acess_token=' +  token + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100';
 
-=======
->>>>>>> 4aa5d23ba60f7966a7780167378f598b38fb19d6
 		var data_json=request('GET','https://api.github.com/repos/' + repo + '/issues?state=' + state + '&access_token=' +  token + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100',options);
 		data=JSON.parse(data_json.getBody());
 		issue_array=issue_array.concat(data);
@@ -66,8 +59,7 @@ function mainLoadingGET(state, req, res, next) {
 		}
   		page++;
   	}
-<<<<<<< HEAD
-=======
+
   	indexData.totalNumber=issue_array.length;
   	indexData.days=days;
   	indexData.daysEnd=daysEnd;
@@ -80,7 +72,6 @@ function mainLoadingGET(state, req, res, next) {
 	}
   	
 	console.log("I AM LOADING THE GET PAGE");
->>>>>>> 4aa5d23ba60f7966a7780167378f598b38fb19d6
   	load(res, state);
 }
 
