@@ -17,19 +17,12 @@
   <div class="loginbox">
   <div id="panel">
   <br>
-   <center> <h1 class = "animated bounceInLeft"> <u> GitIssues </u></h1></center>
-   <center> <h2 class = "animated bounceInLeft"> Welcome <%= user %>!</h2></center>
+   <center> <h1 class = "animated bounceInLeft"> Welcome <%= user %> !! </h1></center>
   <br>
-
-
 <% if (user == 'User') { %>
-
-
 <center><button onclick="location.href = 'https://github.com/login/oauth/authorize?client_id=58161dcf40849abffecd&scope=repo';" id="SignUp" class="btn btn-lg btn-success" >Github OAuth</button></center>
 <br>
-<br>
-
-<% } %>
+<br><% } %>
 
 <div class="conatiner">
   
@@ -47,12 +40,9 @@
       </div>
     </div>
     <br>
-
-
-
-
-<span style="margin-right:30px"><b>  Range of Days:     </b>
-<input type="text" name="days" value="2" ><span style="margin-left:10px;margin-right:10px"> to </span> <input type="text" name="daysEnd" value="5" >
+   <input type="hidden" name="token" value=<%= accessToken %>>
+<span style="margin-right:20px"><b>Range of Days:     </b>
+<input type="text" name="days" value="2"><span style="margin-left:10px;margin-right:10px"> to </span> <input type="text" name="daysEnd" value="5">
    <br><br><br><br>
          
       <div class="col-sm-offset-2 col-sm-10">
@@ -66,4 +56,3 @@
 </div>
   </body>
 </html>
-
