@@ -4,7 +4,7 @@ var request = require('sync-request');
 
 
 indexData={};
-obsWindow=[1,2,4,7];
+obsWindow=[1,2,4,7, 14, 21];
 
 
 
@@ -71,15 +71,14 @@ function mainLoadingGET(state, req, res, next) {
 		close(issue_array);
 	}
   	
-	console.log("I AM LOADING THE GET PAGE");
-  	load(res, state);
+ 	load(res, state);
 }
 
 
 function open (issue_array) {
 	var noIssues=Array.apply(null, new Array(obsWindow.length+1)).map(Number.prototype.valueOf,0);
-	var within=0;
-	for(i=0;i<issue_array.length;i++){		
+	for(i=0;i<issue_array.length;i++){
+		within = 0;		
 		var daysPast = daysFromCurrent(issue_array[i].created_at);
 		if (indexData.days < daysPast && daysPast < indexData.daysEnd) {
 			indexData.numberOfIssues++;
@@ -100,8 +99,8 @@ function open (issue_array) {
 
 function close (issue_array) {
 	var noIssues=Array.apply(null, new Array(obsWindow.length+1)).map(Number.prototype.valueOf,0);
-	var within=0;
 	for(i=0;i<issue_array.length;i++){		
+		within=0;
 		var daysPast = dateDiff(issue_array[i].created_at,issue_array[i].closed_at);
 		if (indexData.days < daysPast && daysPast < indexData.daysEnd) {
 			indexData.numberOfIssues++;

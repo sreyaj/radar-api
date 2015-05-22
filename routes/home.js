@@ -80,6 +80,9 @@ router.post('/', function(req, res, next){
 	 var days = req.body.days;
 	 var daysEnd = req.body.daysEnd;
 	 var state = req.body.state;
+	 if (isNaN(days) || isNaN(daysEnd)) {
+	 	res.redirect('/');
+	 }
      res.redirect('/issues?username=' + username + "&repo=" + repo + "&token=" + token + "&days=" + days + "&daysEnd=" + daysEnd + "&state=" + state);
 	}
 
