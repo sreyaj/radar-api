@@ -4,16 +4,22 @@ var https = require('https');
 var http = require('http');
 var accessToken='';
 var request= require('sync-request');
+var code = "";
+var res1;
+var username = '';
 /* GET users listing. */
 router.get('/', function(req, res, next) {
+	res1 = res;
 	if(typeof req.query.code != 'undefined'){
+
 	var post_data = {
 	  client_id: '58161dcf40849abffecd',
 	  client_secret: '10ee9d2f6a2402cdca283d8b2ba01529bb216475',
 	  code: req.query.code,
 	  accept: 'json'
 	};
-
+	code = req.query.code;
+	
 	var post_dataString = JSON.stringify(post_data);
 
 	var headers = {
@@ -42,6 +48,16 @@ router.get('/', function(req, res, next) {
 	  res.on('end', function() {
 	    var resultObject = JSON.parse(responseString);
 	    accessToken=resultObject.access_token;
+		var options = { 
+			headers: {
+			'User-Agent': 'funapp'
+			}
+		};
+		var data_json=request('GET','https://api.github.com/user?access_token=' +  accessToken,options);
+		data=JSON.parse(data_json.getBody());
+		username=data.login;	
+		code = '';
+		res1.render('home', { user: username ,accessToken : accessToken});
 	  });
 	});
 
@@ -52,20 +68,14 @@ router.get('/', function(req, res, next) {
 	req_.write(post_dataString);
 	req_.end();
 }	
-	if (accessToken != "") {
-		var options = { 
-			headers: {
-			'User-Agent': 'funapp'
-			}
-		};
-		var data_json=request('GET','https://api.github.com/user?access_token=' +  accessToken,options);
-		data=JSON.parse(data_json.getBody());
-	var username=data.login;	
-	res.render('home', { user: username ,accessToken : accessToken});		
-} else {
-	res.render('home', { user: 'User',accessToken : accessToken});
-}
-  
+
+	if (code == '') {
+		if (username != '') {
+			res.render('home', { user: username,accessToken : accessToken});
+		} else {
+			res.render('home', { user: 'User',accessToken : accessToken});
+		}
+	}
 });
 
 router.post('/', function(req, res, next){
