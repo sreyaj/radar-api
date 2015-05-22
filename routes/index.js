@@ -1,32 +1,25 @@
 var express = require('express');
 var router = express.Router();
 var request = require('sync-request');
-data = "";
-issue_array=[];
-var page=1;
-var no_issues_mod100=0;
-var days = 0;
-var numberOfIssues = 0;
-var totalNumber = 0;
-var daysEnd = 0;
+
+
+indexData={};
+obsWindow=[1,2,4,7];
+
+
 
 
 router.get('/', function(req, res, next) {
-	issue_array = [];
-	data = "";
-	numberOfIssues = 0;
-	totalNumber = 0;	
-	no_issues_mod100=0;
 
 	try {
 		if (req.query.token != undefined) {
 			
 			if (req.query.state == "Open") {
-					data = "";
+					//data = "";
 				mainLoadingGET("open", req, res, next);
 
 			} else {
-					data = "";
+					//data = "";
 				mainLoadingGET("closed", req, res, next);
 			}
 		} else {
@@ -40,67 +33,100 @@ router.get('/', function(req, res, next) {
 
 
 function mainLoadingGET(state, req, res, next) {
-	
-	page = 1;
+	data='';
+	issue_array=[];
+	no_issues_mod100=0;
+
 	repo = req.query.username + "/" + req.query.repo;
 	days = req.query.days;
 	daysEnd = req.query.daysEnd;
 	token = req.query.token;
+<<<<<<< HEAD
+=======
+
+	page=1;
+
+>>>>>>> 4aa5d23ba60f7966a7780167378f598b38fb19d6
 	while(data.length%100==0 && no_issues_mod100==0){
 		var options = { 
 			headers: {
 			'User-Agent': 'funapp'
 			}
 		};
+<<<<<<< HEAD
 		willPrint = 'https://api.github.com/repos/' + repo + '/issues?state=' + state + '&acess_token=' +  token + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100';
 
+=======
+>>>>>>> 4aa5d23ba60f7966a7780167378f598b38fb19d6
 		var data_json=request('GET','https://api.github.com/repos/' + repo + '/issues?state=' + state + '&access_token=' +  token + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100',options);
-
 		data=JSON.parse(data_json.getBody());
-		//
-		if (state == "open") {
-			open();
-		} else {
-			close();
+		issue_array=issue_array.concat(data);
+		if(data.length==0){
+			no_issues_mod100=1;
 		}
-		//
   		page++;
   	}
+<<<<<<< HEAD
+=======
+  	indexData.totalNumber=issue_array.length;
+  	indexData.days=days;
+  	indexData.daysEnd=daysEnd;
+  	indexData.numberOfIssues=0;
+  	indexData.obsWindow=obsWindow;
+	if (state == "open") {
+		open(issue_array);
+	} else {
+		close(issue_array);
+	}
+  	
+	console.log("I AM LOADING THE GET PAGE");
+>>>>>>> 4aa5d23ba60f7966a7780167378f598b38fb19d6
   	load(res, state);
 }
 
 
-function open () {
-	totalNumber = totalNumber + data.length;
-	for(i=0;i<data.length;i++){
-		var a = data[i].created_at;
-		var daysPast = daysFromCurrent(a);
-		if (days < daysPast && daysPast < daysEnd) {
-			numberOfIssues++;
+function open (issue_array) {
+	var noIssues=Array.apply(null, new Array(obsWindow.length+1)).map(Number.prototype.valueOf,0);
+	var within=0;
+	for(i=0;i<issue_array.length;i++){		
+		var daysPast = daysFromCurrent(issue_array[i].created_at);
+		if (indexData.days < daysPast && daysPast < indexData.daysEnd) {
+			indexData.numberOfIssues++;
 		}
+		for(j=0;j<noIssues.length-1;j++){
+			if(daysPast<obsWindow[j]){
+				noIssues[j]++;
+				within=1;
+				break;
+			}
+		}
+		if(within==0)
+			noIssues[obsWindow.length]++;		
 	}
-  	
-  	if(data.length==0){
-		no_issues_mod100=1;
-	}
+	indexData.noIssues=noIssues;
 }
 
 
-function close () {
-	totalNumber = totalNumber + data.length;
-	for(i=0;i<data.length;i++) {
-		var a = data[i].created_at;
-		var b = data[i].closed_at;
-		var daysPast = dateDiff(a, b);
-		if (days < daysPast && daysPast < daysEnd) {
-			numberOfIssues++;
+function close (issue_array) {
+	var noIssues=Array.apply(null, new Array(obsWindow.length+1)).map(Number.prototype.valueOf,0);
+	var within=0;
+	for(i=0;i<issue_array.length;i++){		
+		var daysPast = dateDiff(issue_array[i].created_at,issue_array[i].closed_at);
+		if (indexData.days < daysPast && daysPast < indexData.daysEnd) {
+			indexData.numberOfIssues++;
 		}
+		for(j=0;j<noIssues.length-1;j++){
+			if(daysPast<obsWindow[j]){
+				noIssues[j]++;
+				within=1;
+				break;
+			}
+		}
+		if(within==0)
+			noIssues[obsWindow.length]++;		
 	}
-
-  	if(data.length==0){
-		no_issues_mod100=1;
-	}
-}
+	indexData.noIssues=noIssues;
+}	
 
 
 
@@ -109,9 +135,11 @@ module.exports = router;
 
 function load(res, state) {
 	if (state == "open") {
-		res.render('index', { daysEnd: daysEnd, number: numberOfIssues, day: days, state: "Open issues", total: totalNumber});
+		//res.render('index', { daysEnd: daysEnd, number: numberOfIssues, day: days, state: "Open issues", total: totalNumber});
+		res.render('open',{indexData:indexData,state: "Open Issues"});
 	} else {
-		res.render('close', { daysEnd: daysEnd, number: numberOfIssues, day: days, state: "Closed issues", total: totalNumber });
+		//res.render('close', { daysEnd: daysEnd, number: numberOfIssues, day: days, state: "Closed issues", total: totalNumber });
+		res.render('closed',{indexData:indexData,state: "Closed Issues"});
 	}
 }
 

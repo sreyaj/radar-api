@@ -3,6 +3,7 @@ var router = express.Router();
 var https = require('https');
 var http = require('http');
 var accessToken='';
+var request= require('sync-request');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 	if(typeof req.query.code != 'undefined'){
@@ -52,16 +53,24 @@ router.get('/', function(req, res, next) {
 	req_.end();
 }	
 	if (accessToken != "") {
-	res.render('home', { user: 'Person Who Has Signed In',accessToken : accessToken});		
+		var options = { 
+			headers: {
+			'User-Agent': 'funapp'
+			}
+		};
+		var data_json=request('GET','https://api.github.com/user?access_token=' +  accessToken,options);
+		data=JSON.parse(data_json.getBody());
+	var username=data.login;	
+	res.render('home', { user: username ,accessToken : accessToken});		
 } else {
-	res.render('home', { user: 'User!',accessToken : accessToken});
+	res.render('home', { user: 'User',accessToken : accessToken});
 }
   
 });
 
 router.post('/', function(req, res, next){
 	 if (accessToken == "") {
-	 	res.send("Please sign up to use.");
+	 	res.send("Please authorise the application to use.");
 	 } else {
 
 
