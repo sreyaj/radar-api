@@ -73,7 +73,7 @@ function mainLoadingGET(state, req, res, next) {
 		close(issue_array);
 	}
   	
-	console.log("I AM LOADING THE GET PAGE");
+	console.log("GET PAGE");
   	load(res, state);
 }
 
@@ -133,7 +133,6 @@ function close (issue_array) {
    var type=0;
    var status=0;
    var issueMatrix=zeros([4,4]);
-   console.log("Came to close");
    for(i=0;i<issue_array.length;i++){    
        within=0;    
        withinClosedWithin = 0;
