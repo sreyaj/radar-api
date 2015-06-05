@@ -73,7 +73,7 @@ function mainLoadingGET(state, req, res, next) {
 		close(issue_array);
 	}
   	
-	console.log("GET PAGE");
+	// console.log("GET PAGE");
   	load(res, state);
 }
 
@@ -121,7 +121,7 @@ function open (issue_array) {
 	indexData.issueMatrix=issueMatrix;
 	indexData.typeNameArray=typeNameArray;
 	indexData.stateNameArray=stateNameArray;
-	console.log(issueMatrix);
+	// console.log(issueMatrix);
 }
 
 
