@@ -5,8 +5,7 @@ language: node_js
 node_js:
     - 0.10.25
 
-build_image:
-    - shippableimages/ubuntu1404_nodejs
+build_image: shippableimages/ubuntu1404_nodejs
 
 before_install:
     - source ~/.nvm/nvm.sh && nvm install $SHIPPABLE_NODE_VERSION
