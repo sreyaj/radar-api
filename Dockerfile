@@ -12,5 +12,5 @@ ADD . /src
 # Install app dependencies
 RUN cd /src; npm install
 
-CMD ["sh", "/src/start.sh"]
+CMD ["nodejs", "/src/bin/www"]
 EXPOSE    3000
