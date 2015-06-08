@@ -54,7 +54,6 @@ function mainLoadingGET(state, req, res, next) {
 		};
 		var data_json=request('GET','https://api.github.com/repos/' + repo + '/issues?state=' + state + '&access_token=' +  token + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100',options);
     data=JSON.parse(data_json.getBody());
-    console.log(data);
 		issue_array=issue_array.concat(data);
 		if(data.length==0){
 			no_issues_mod100=1;
