@@ -13,4 +13,4 @@ ADD . /src
 RUN cd /src; npm install
 
 CMD ["nodejs", "/src/bin/www"]
-EXPOSE    3000
+EXPOSE    3001

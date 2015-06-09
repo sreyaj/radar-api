@@ -1,1 +1,0 @@
-["node",["/home/prajwal/gitissues/node_modules/sync-request/lib/worker.js"],{"input":"{\"method\":\"GET\",\"url\":\"https://api.github.com/repos/shippable/support/issues?state=closed&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page=10&per_page=100\",\"options\":{\"headers\":{\"User-Agent\":\"funapp\"}}}"}]
