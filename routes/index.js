@@ -172,10 +172,10 @@ module.exports = router;
 function load(res, state) {
 	if (state == "open") {
 		//res.render('index', { daysEnd: daysEnd, number: numberOfIssues, day: days, state: "Open issues", total: totalNumber});
-		res.render('open',{indexData:indexData,state: "Open Issues"});
+		res.send('open',{indexData:indexData,state: "Open Issues"});
 	} else {
 		//res.render('close', { daysEnd: daysEnd, number: numberOfIssues, day: days, state: "Closed issues", total: totalNumber });
-		res.render('closed',{indexData:indexData,state: "Closed Issues"});
+		res.send('closed',{indexData:indexData,state: "Closed Issues"});
 	}
 }
 

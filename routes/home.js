@@ -3,7 +3,7 @@ var router = express.Router();
 var https = require('https');
 var http = require('http');
 var accessToken='';
-var request= require('sync-request');
+var request= require('request');
 var code = "";
 var res1;
 var username = '';
@@ -57,7 +57,7 @@ router.get('/', function(req, res, next) {
 		data=JSON.parse(data_json.getBody());
 		username=data.login;	
 		code = '';
-		res1.render('home', { user: username ,accessToken : accessToken});
+		res1.json({ user: username ,accessToken : accessToken});
 	  });
 	});
 
@@ -71,9 +71,9 @@ router.get('/', function(req, res, next) {
 
 	if (code == '') {
 		if (username != '') {
-			res.render('home', { user: username,accessToken : accessToken});
+			res.json({ user: username,accessToken : accessToken});
 		} else {
-			res.render('home', { user: 'User',accessToken : accessToken});
+			res.json({ user: 'User',accessToken : accessToken});
 		}
 	}
 });
