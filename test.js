@@ -3,14 +3,12 @@ var superagent = require("superagent"),
     expect = chai.expect,
     should = require("should"),
     nock = require("nock");
-var request = require('sync-request');
 
 describe("Index", function() {
-  it("renders HTML", function(done) {
-    superagent.get("http://localhost:3000/")
+  it("renders something", function(done) {
+    superagent.get("http://localhost:3001/")
     .end(function(err, res) {
       (err === null).should.equal(true);
-      res.should.be.html;
       res.statusCode.should.equal(200);
       done();
     });
@@ -18,13 +16,12 @@ describe("Index", function() {
 });
 
 describe("Open issues", function() {
-  it("renders open issues page", function(done) {
-    this.timeout(15000);
-    superagent.get("http://localhost:3000/issues?username=shippable&repo=support&token=59c00bbcdcdf851f7ad9ac905000c7f4d31f30f7&days=2&daysEnd=5&state=Open")
+  it("renders open issues info", function(done) {
+    superagent.get("http://localhost:3001/issues?username=shippable&repo=support&token=8b5764559d5cc7d8dd41ef7e639dc238eab4338a&days=2&daysEnd=5&state=Open")
     .end(function(err, res) {
       (err === null).should.equal(true);
-      res.text.should.startWith("<!DOCTYPE html>\n<html>\n  <head>\n    <title>Issues</title>");
-      res.text.should.containEql("Open Issues");
+      res.should.be.json;
+      res.text.should.containEql("open");
       res.statusCode.should.equal(200);
       done();
     });
@@ -32,13 +29,12 @@ describe("Open issues", function() {
 });
 
 describe("Closed issues", function() {
-  it("renders closed issues page", function(done) {
-    this.timeout(15000);
-    superagent.get("http://localhost:3000/issues?username=shippable&repo=support&token=59c00bbcdcdf851f7ad9ac905000c7f4d31f30f7&days=2&daysEnd=5&state=Close")
+  it("renders closed issues info", function(done) {
+    superagent.get("http://localhost:3001/issues?username=shippable&repo=support&token=8b5764559d5cc7d8dd41ef7e639dc238eab4338a&days=2&daysEnd=5&state=Close")
     .end(function(err, res) {
       (err === null).should.equal(true);
-      res.text.should.startWith("<!DOCTYPE html>\n<html>\n <head>\n   <title>Issues</title>");
-      res.text.should.containEql("Closed Issues");
+      res.should.be.json;
+      res.text.should.containEql("close");
       res.statusCode.should.equal(200);
       done();
     });
@@ -47,13 +43,11 @@ describe("Closed issues", function() {
 
 describe("Failed auth", function() {
   it("Should not render issues page, instead main page", function(done) {
-    this.timeout(15000);
-    superagent.get("http://localhost:3000/issues?username=shippable&repo=support&token=no&days=2&daysEnd=5&state=Open")
+    superagent.get("http://localhost:3001/issues?username=shippable&repo=support&token=no&days=2&daysEnd=5&state=Open")
     .end(function(err, res) {
-      res.text.should.startWith("<!DOCTYPE html>\n<html>\n  <head>\n    <title>Issue Timeline</title>");
+      res.text.should.not.containEql("open");
+      res.text.should.not.containEql("close");
       done();
     });
   });
 });
-
-

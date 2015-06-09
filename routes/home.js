@@ -3,10 +3,12 @@ var router = express.Router();
 var https = require('https');
 var http = require('http');
 var request= require('sync-request');
+
 var accessToken='';
 var code = "";
 var res1;
 var username = '';
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 	res1 = res;
