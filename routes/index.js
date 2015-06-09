@@ -27,6 +27,7 @@ router.get('/', function(req, res, next) {
 			res.redirect('/');	
 		}
 	} catch (e) {
+    console.log('error');
 		res.redirect('/');	
 	}
 	
@@ -43,16 +44,15 @@ function mainLoadingGET(state, req, res, next) {
 	daysEnd = req.query.daysEnd;
 	token = req.query.token;
 
-
 	page=1;
 
 	while(data.length%100==0 && no_issues_mod100==0){
 		var options = { 
 			headers: {
-			'User-Agent': 'funapp'
+			'User-Agent': 'gitissues'
 			}
 		};
-		var data_json=request('GET','https://api.github.com/repos/' + repo + '/issues?state=' + state + '&access_token=' +  token + '&client_id=58161dcf40849abffecd&client_secret=10ee9d2f6a2402cdca283d8b2ba01529bb216475&page='+page+'&per_page=100',options);
+		var data_json=request('GET','https://api.github.com/repos/' + repo + '/issues?state=' + state + '&access_token=' +  token + '&client_id=966ce4cafe87b84a29c5&client_secret=4ff2bb2883f32c9702dd12a6c2464009f07c1550&page='+page+'&per_page=100',options);
     data=JSON.parse(data_json.getBody());
 		issue_array=issue_array.concat(data);
 		if(data.length==0){
@@ -169,14 +169,8 @@ function close (issue_array) {
 module.exports = router;
 
 
-function load(res, state) {
-	if (state == "open") {
-		//res.render('index', { daysEnd: daysEnd, number: numberOfIssues, day: days, state: "Open issues", total: totalNumber});
-		res.send('open',{indexData:indexData,state: "Open Issues"});
-	} else {
-		//res.render('close', { daysEnd: daysEnd, number: numberOfIssues, day: days, state: "Closed issues", total: totalNumber });
-		res.send('closed',{indexData:indexData,state: "Closed Issues"});
-	}
+function load(res, state) {  
+	res.send({indexData:indexData,state:state});
 }
 
 function daysFromCurrent(dateString){

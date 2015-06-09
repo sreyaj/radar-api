@@ -3,7 +3,7 @@ var router = express.Router();
 var https = require('https');
 var http = require('http');
 var accessToken='';
-var request= require('request');
+var request= require('sync-request');
 var code = "";
 var res1;
 var username = '';
@@ -11,64 +11,60 @@ var username = '';
 router.get('/', function(req, res, next) {
 	res1 = res;
 	if(typeof req.query.code != 'undefined'){
-
-	var post_data = {
-	  client_id: '58161dcf40849abffecd',
-	  client_secret: '10ee9d2f6a2402cdca283d8b2ba01529bb216475',
-	  code: req.query.code,
-	  accept: 'json'
-	};
-	code = req.query.code;
-	
-	var post_dataString = JSON.stringify(post_data);
-
-	var headers = {
-	  'Content-Type': 'application/json',
-	  'Content-Length': post_dataString.length,
-	  'Accept': 'application/json'
-	};
-
-	var options = {
-	  host: 'github.com',
-	  port: 443,
-	  path: '/login/oauth/access_token',
-	  method: 'POST',
-	  headers: headers
-	};
-
-	// Setup the request.  The options parameter is
-	// the object we defined above.
-	var req_ = https.request(options, function(res) {
-	  res.setEncoding('utf-8');
-	  var responseString = '';
-	  res.on('data', function(data) {
-	    responseString += data;
-	  });
-
-	  res.on('end', function() {
-	    var resultObject = JSON.parse(responseString);
-	    accessToken=resultObject.access_token;
-		var options = { 
-			headers: {
-			'User-Agent': 'funapp'
-			}
+		var post_data = {
+		  client_id: '966ce4cafe87b84a29c5',
+		  client_secret: '4ff2bb2883f32c9702dd12a6c2464009f07c1550',
+		  code: req.query.code,
+		  accept: 'json'
 		};
-		var data_json=request('GET','https://api.github.com/user?access_token=' +  accessToken,options);
-		data=JSON.parse(data_json.getBody());
-		username=data.login;	
-		code = '';
-		res1.json({ user: username ,accessToken : accessToken});
-	  });
-	});
+		code = req.query.code;
+		
+		var post_dataString = JSON.stringify(post_data);
 
-	req_.on('error', function(e) {
-	  // TODO: handle error.
-	});
+		var headers = {
+		  'Content-Type': 'application/json',
+		  'Content-Length': post_dataString.length,
+		  'Accept': 'application/json'
+		};
 
-	req_.write(post_dataString);
-	req_.end();
-}	
+		var options = {
+		  host: 'github.com',
+		  port: 443,
+		  path: '/login/oauth/access_token',
+		  method: 'POST',
+		  headers: headers
+		};
+		// Setup the request.  The options parameter is
+		// the object we defined above.
+		var req_ = https.request(options, function(res) {
+		  res.setEncoding('utf-8');
+		  var responseString = '';
+		  res.on('data', function(data) {
+		    responseString += data;
+		  });
+		  res.on('end', function() {
+		    var resultObject = JSON.parse(responseString);
+		    accessToken=resultObject.access_token;
+			var options = { 
+				headers: {
+				'User-Agent': 'gitissues'
+				}
+			};
+			var data_json=request('GET','https://api.github.com/user?access_token=' +  accessToken,options);
+			data=JSON.parse(data_json.getBody());
+			username=data.login;	
+			code = '';
+			res1.json({ user: username ,accessToken : accessToken});
+		  });
+		});
 
+		req_.on('error', function(e) {
+		  console.log('error');
+		});
+
+		req_.write(post_dataString);
+		req_.end();
+	}	
 	if (code == '') {
 		if (username != '') {
 			res.json({ user: username,accessToken : accessToken});
