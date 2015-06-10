@@ -17,7 +17,7 @@ describe("Index", function() {
 
 describe("Open issues", function() {
   it("renders open issues info", function(done) {
-    superagent.get("http://localhost:3001/issues?username=shippable&repo=support"+
+    superagent.get("http://localhost:3001/issues?repo=shippable/support"+
       "&token=8b5764559d5cc7d8dd41ef7e639dc238eab4338a&days=2&daysEnd=5&state=Open")
     .end(function(err, res) {
       (err === null).should.equal(true);
@@ -31,7 +31,7 @@ describe("Open issues", function() {
 
 describe("Closed issues", function() {
   it("renders closed issues info", function(done) {
-    superagent.get("http://localhost:3001/issues?username=shippable&repo=support&"+
+    superagent.get("http://localhost:3001/issues?repo=shippable/support&"+
       "&token=8b5764559d5cc7d8dd41ef7e639dc238eab4338a&days=2&daysEnd=5&state=Close")
     .end(function(err, res) {
       (err === null).should.equal(true);
@@ -45,7 +45,7 @@ describe("Closed issues", function() {
 
 describe("Failed auth", function() {
   it("Should not render issues page, instead main page", function(done) {
-    superagent.get("http://localhost:3001/issues?username=shippable&repo=support&token=no&days=2&daysEnd=5&state=Open")
+    superagent.get("http://localhost:3001/issues?repo=shippable/support&token=no&days=2&daysEnd=5&state=Open")
     .end(function(err, res) {
       res.text.should.not.containEql("open");
       res.text.should.not.containEql("close");

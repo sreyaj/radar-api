@@ -50,7 +50,6 @@ function mainLoadingGET(state, req, res, next) {
     '&client_id=966ce4cafe87b84a29c5' +
     '&client_secret=4ff2bb2883f32c9702dd12a6c2464009f07c1550' +
     '&page='+page+'&per_page=100',options);
-    console.log(data_json.statusCode);
     if (data_json.statusCode == 404){
       loadState = 'repoError';
       break;
@@ -63,8 +62,7 @@ function mainLoadingGET(state, req, res, next) {
       }
         page++;  
     }
-    console.log(loadState);
-    }
+  }
   indexData.totalNumber=issue_array.length;
   indexData.days=days;
   indexData.daysEnd=daysEnd;
