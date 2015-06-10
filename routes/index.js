@@ -8,33 +8,34 @@ var typeNameArray = ["question", "bug", "feature request", "other"];
 var stateNameArray = ["resolved", "triaged", "in progress", "other"];
 
 router.get('/', function(req, res, next) {
-
   try {
     if (req.query.token !== undefined) {
       if (req.query.state == "Open") {
         mainLoadingGET("open", req, res, next);
-      } else {
+      } else if (req.query.state == "Close"){
         mainLoadingGET("closed", req, res, next);
       }
     } else {
       res.redirect('/');
     }
   } catch (e) {
-    console.log('error');
-    res.redirect('/');
+    if (e.statusCode == 401){
+      load(res,'accessError');
+    }
   }
 });
 
 function mainLoadingGET(state, req, res, next) {
-  data='';
-  issue_array=[];
-  no_issues_mod100=0;
+  var data = '';
+  var issue_array = [];
+  var no_issues_mod100 = 0;
 
-  repo = req.query.username + "/" + req.query.repo;
-  days = req.query.days;
-  daysEnd = req.query.daysEnd;
-  token = req.query.token;
-
+  var repo = req.query.repo;
+  var days = req.query.days;
+  var daysEnd = req.query.daysEnd;
+  var token = req.query.token;
+  var loadState = state;
+  global.accessToken = token;
   page=1;
 
   while(data.length%100===0 && no_issues_mod100===0){
@@ -46,29 +47,37 @@ function mainLoadingGET(state, req, res, next) {
     var data_json=request('GET','https://api.github.com/repos/' + repo +
     '/issues?state=' + state +
     '&access_token=' + token +
-    '&client_id=966ce4cafe87b84a29c5&' +
-    'client_secret=4ff2bb2883f32c9702dd12a6c2464009f07c1550' +
+    '&client_id=966ce4cafe87b84a29c5' +
+    '&client_secret=4ff2bb2883f32c9702dd12a6c2464009f07c1550' +
     '&page='+page+'&per_page=100',options);
-    data=JSON.parse(data_json.getBody());
-    issue_array=issue_array.concat(data);
-    if(data.length===0){
-      no_issues_mod100=1;
+    console.log(data_json.statusCode);
+    if (data_json.statusCode == 404){
+      loadState = 'repoError';
+      break;
+    } 
+    else {
+      data=JSON.parse(data_json.getBody());
+      issue_array=issue_array.concat(data);
+      if(data.length===0){
+        no_issues_mod100=1;
+      }
+        page++;  
     }
-      page++;
+    console.log(loadState);
     }
-    indexData.totalNumber=issue_array.length;
-    indexData.days=days;
-    indexData.daysEnd=daysEnd;
-    indexData.numberOfIssues=0;
-    indexData.obsWindow=obsWindow;
-    indexData.repo=repo;
-    indexData.numberOfIssuesClosedWithin=0;
-  if (state == "open") {
+  indexData.totalNumber=issue_array.length;
+  indexData.days=days;
+  indexData.daysEnd=daysEnd;
+  indexData.numberOfIssues=0;
+  indexData.obsWindow=obsWindow;
+  indexData.repo=repo;
+  indexData.numberOfIssuesClosedWithin=0;
+  if (loadState == "open") {
     open(issue_array);
-  } else {
+  } else if (loadState == "closed") {
     close(issue_array);
   }
-  load(res, state);
+  load(res, loadState);
 }
 
 function open (issue_array) {
