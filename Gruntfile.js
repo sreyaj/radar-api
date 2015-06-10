@@ -12,7 +12,7 @@ module.exports = function (grunt) {
     simplemocha: {
       options: {
         globals: ["should"],
-        timeout: 15000,
+        timeout: 25000,
         ignoreLeaks: false,
         ui: "bdd",
         reporter: "xunit-file"
