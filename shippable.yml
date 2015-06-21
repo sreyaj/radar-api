@@ -5,24 +5,17 @@ language: node_js
 node_js:
     - 0.10.25
 
-build_image: shippableimages/ubuntu1404_nodejs
-
 env:
-    - XUNIT_FILE=shippable/testresults/result.xml
+    - XUNIT_FILE=./shippable/testresults/result.xml
 
 before_install:
-    - source ~/.nvm/nvm.sh && nvm install $SHIPPABLE_NODE_VERSION
     - node --version
-    - npm install -g grunt-cli
-    - mkdir -p shippable/testresults
-    - mkdir -p shippable/codecoverage
-
-install:
-	- npm install
+    - mkdir -p ./shippable/testresults
+    - mkdir -p ./shippable/codecoverage
 
 script:
     - grunt
 
 after_script:
     - ./node_modules/.bin/istanbul cover grunt -- -u tdd
-    - ./node_modules/.bin/istanbul report cobertura --dir  shippable/codecoverage/
+    - ./node_modules/.bin/istanbul report cobertura --dir  ./shippable/codecoverage/
