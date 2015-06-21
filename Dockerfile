@@ -2,9 +2,10 @@
 FROM shipimg/appbase:latest
 
 # Bundle app source
+RUN mkdir -p /src
 ADD . /src
 # Install app dependencies
 RUN cd /src; npm install
 
-CMD ["nodejs", "/src/api.app.js"]
+ENTRYPOINT ["/src/boot.sh"]
 EXPOSE 3001

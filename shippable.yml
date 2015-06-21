@@ -13,9 +13,6 @@ before_install:
     - mkdir -p ./shippable/testresults
     - mkdir -p ./shippable/codecoverage
 
-install:
-	- npm install
-
 script:
     - grunt
 
