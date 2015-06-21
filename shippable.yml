@@ -5,13 +5,10 @@ language: node_js
 node_js:
     - 0.10.25
 
-build_image: shippableimages/ubuntu1404_nodejs
-
 env:
     - XUNIT_FILE=shippable/testresults/result.xml
 
 before_install:
-    - source ~/.nvm/nvm.sh && nvm install $SHIPPABLE_NODE_VERSION
     - node --version
     - npm install -g grunt-cli
     - mkdir -p shippable/testresults
