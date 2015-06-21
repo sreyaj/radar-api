@@ -15,7 +15,3 @@ before_install:
 
 script:
     - grunt
-
-after_script:
-    - istanbul cover grunt -- -u tdd
-    - istanbul report cobertura --dir  ./shippable/codecoverage/
