@@ -1,6 +1,8 @@
 {
   "name": "radar-api",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "private": true,
+  "main": "api.app.js",
   "author": "Kai",
   "scripts": {
     "start": "node api.app.js"
