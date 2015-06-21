@@ -5,7 +5,7 @@ module.exports = function (grunt) {
     express: {
       test: {
         options: {
-          script: "bin/www"
+          script: "api.app.js"
         }
       }
     },

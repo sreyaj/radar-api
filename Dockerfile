@@ -6,5 +6,5 @@ ADD . /src
 # Install app dependencies
 RUN cd /src; npm install
 
-CMD ["nodejs", "/src/bin/www"]
+CMD ["nodejs", "/src/api.app.js"]
 EXPOSE 3001
